@@ -120,40 +120,18 @@ void handleKey_SOUND_VOLTEX(UINT status, UINT obj, UINT value){
             Sleep(20);
             break;
         case ART_ML_MKII_KEY_OFF:
-            switch(obj){
-                case ART_ML_MKII_ROTENC_11:
-                    if(value > 0x7){ //left
-                        ip.ki.wScan = DIK_A;
-                    } else if(value > 0x00){ //right
-                        ip.ki.wScan = DIK_S;
-                    } else {
-                        break;
-                    }
-                    //press
-                    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
-                    SendInput(1, &ip, sizeof(INPUT));
-                    Sleep(20);
-                    //release
-                    ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-                    SendInput(1, &ip, sizeof(INPUT));
+             switch(obj){
+                case ART_ML_MKII_KEY_DSH:
+                    ip.ki.wScan = DIK_V;
                     break;
-                case ART_ML_MKII_ROTENC_15:
-                    if(value > 0x7){ //left
-                        ip.ki.wScan = DIK_L;
-                    } else if(value > 0x00){ //right
-                        ip.ki.wScan = DIK_SEMICOLON;
-                    } else {
-                        break;
-                    }
-                    //press
-                    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
-                    SendInput(1, &ip, sizeof(INPUT));
-                    Sleep(20);
-                    //release
-                    ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-                    SendInput(1, &ip, sizeof(INPUT));
+                case ART_ML_MKII_KEY_FSH:
+                    ip.ki.wScan = DIK_B;
                     break;
             }
+            //release
+            ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+            SendInput(1, &ip, sizeof(INPUT));
+            Sleep(20);
             break;
         case ART_ML_MKII_PAD_ON:
             switch(obj){
