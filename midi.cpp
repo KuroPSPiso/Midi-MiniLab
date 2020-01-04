@@ -21,10 +21,22 @@
 #define ART_ML_MKII_STATUS_ROTENC_SHIFT 0xB0
 #define ART_ML_MKII_ROTENC_1 0x70
 #define ART_ML_MKII_ROTENC_1_SHIFT 0x7
+#define ART_ML_MKII_ROTENC_2 0x17
+#define ART_ML_MKII_ROTENC_3 0x18
+#define ART_ML_MKII_ROTENC_4 0x19
+#define ART_ML_MKII_ROTENC_5 0x1A
+#define ART_ML_MKII_ROTENC_6 0x1B
+#define ART_ML_MKII_ROTENC_7 0x1C
+#define ART_ML_MKII_ROTENC_8 0x1D
 #define ART_ML_MKII_ROTENC_9 0x72
 #define ART_ML_MKII_ROTENC_9_SHIFT 0x74
+#define ART_ML_MKII_ROTENC_10 0x1F
 #define ART_ML_MKII_ROTENC_11 0x21
+#define ART_ML_MKII_ROTENC_12 0x22
+#define ART_ML_MKII_ROTENC_13 0x34
+#define ART_ML_MKII_ROTENC_14 0x35
 #define ART_ML_MKII_ROTENC_15 0x36
+#define ART_ML_MKII_ROTENC_16 0x37
 
 #define ART_ML_MKII_KEY_ON 0x90
 #define ART_ML_MKII_KEY_OFF 0x80
@@ -50,14 +62,6 @@ void handleKey_SOUND_VOLTEX(UINT status, UINT obj, UINT value){
     const UINT KEYEVENT_KEYUP = 0x02;
     const UINT KEYEVENT_KEYDOWN = 0x00;
 
-/*
-INPUT[] InputData = new INPUT[1];
-InputData[0].Type = (UInt32)InputType.KEYBOARD;
-//InputData[0].Vk = (ushort)DirectInputKeyScanCode;
-//Virtual key is ignored when sending scan codeInputData[0].Scan = (ushort)DirectInputKeyScanCode;InputData[0].Flags = (uint)KeyboardFlag.KEYUP | (uint)KeyboardFlag.SCANCODE;InputData[0].Time = 0;InputData[0].ExtraInfo = IntPtr.Zero;
-// Send Keyup flag "OR"ed with Scancode flag for keyup to work properlySendInput(1, InputData, Marshal.SizeOf(typeof(INPUT)))
-*/
-
     INPUT ip;
     ip.type = INPUT_KEYBOARD;
     ip.ki.time = 0;
@@ -78,6 +82,7 @@ InputData[0].Type = (UInt32)InputType.KEYBOARD;
                     //press
                     ip.ki.dwFlags = KEYEVENTF_SCANCODE;
                     SendInput(1, &ip, sizeof(INPUT));
+                    Sleep(20);
                     //release
                     ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
                     SendInput(1, &ip, sizeof(INPUT));
@@ -93,6 +98,7 @@ InputData[0].Type = (UInt32)InputType.KEYBOARD;
                     //press
                     ip.ki.dwFlags = KEYEVENTF_SCANCODE;
                     SendInput(1, &ip, sizeof(INPUT));
+                    Sleep(20);
                     //release
                     ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
                     SendInput(1, &ip, sizeof(INPUT));
@@ -111,19 +117,89 @@ InputData[0].Type = (UInt32)InputType.KEYBOARD;
             //press
             ip.ki.dwFlags = KEYEVENTF_SCANCODE;
             SendInput(1, &ip, sizeof(INPUT));
+            Sleep(20);
             break;
         case ART_ML_MKII_KEY_OFF:
             switch(obj){
-                case ART_ML_MKII_KEY_DSH:
-                    ip.ki.wScan = DIK_V;
+                case ART_ML_MKII_ROTENC_11:
+                    if(value > 0x7){ //left
+                        ip.ki.wScan = DIK_A;
+                    } else if(value > 0x00){ //right
+                        ip.ki.wScan = DIK_S;
+                    } else {
+                        break;
+                    }
+                    //press
+                    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
+                    SendInput(1, &ip, sizeof(INPUT));
+                    Sleep(20);
+                    //release
+                    ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+                    SendInput(1, &ip, sizeof(INPUT));
                     break;
-                case ART_ML_MKII_KEY_FSH:
-                    ip.ki.wScan = DIK_B;
+                case ART_ML_MKII_ROTENC_15:
+                    if(value > 0x7){ //left
+                        ip.ki.wScan = DIK_L;
+                    } else if(value > 0x00){ //right
+                        ip.ki.wScan = DIK_SEMICOLON;
+                    } else {
+                        break;
+                    }
+                    //press
+                    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
+                    SendInput(1, &ip, sizeof(INPUT));
+                    Sleep(20);
+                    //release
+                    ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+                    SendInput(1, &ip, sizeof(INPUT));
+                    break;
+            }
+            break;
+        case ART_ML_MKII_PAD_ON:
+            switch(obj){
+                case ART_ML_MKII_PAD_3:
+                    ip.ki.wScan = DIK_D;
+                    break;
+                case ART_ML_MKII_PAD_4:
+                    ip.ki.wScan = DIK_F;
+                    break;
+                case ART_ML_MKII_PAD_5:
+                    ip.ki.wScan = DIK_6;
+                    break;
+                case ART_ML_MKII_PAD_6:
+                    ip.ki.wScan = DIK_J;
+                    break;
+                case ART_ML_MKII_PAD_7:
+                    ip.ki.wScan = DIK_K;
+                    break;
+            }
+            //press
+            ip.ki.dwFlags = KEYEVENTF_SCANCODE;
+            SendInput(1, &ip, sizeof(INPUT));
+            Sleep(20);
+            break;
+        case ART_ML_MKII_PAD_OFF:
+            switch(obj){
+                case ART_ML_MKII_PAD_3:
+                    ip.ki.wScan = DIK_D;
+                    break;
+                case ART_ML_MKII_PAD_4:
+                    ip.ki.wScan = DIK_F;
+                    break;
+                case ART_ML_MKII_PAD_5:
+                    ip.ki.wScan = DIK_6;
+                    break;
+                case ART_ML_MKII_PAD_6:
+                    ip.ki.wScan = DIK_J;
+                    break;
+                case ART_ML_MKII_PAD_7:
+                    ip.ki.wScan = DIK_K;
                     break;
             }
             //release
             ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
             SendInput(1, &ip, sizeof(INPUT));
+            Sleep(20);
             break;
     }
     
