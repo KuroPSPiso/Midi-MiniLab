@@ -2,18 +2,14 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "msvc build",
       "type": "shell",
-      "command": "cl.exe",
-      "args": ["/EHsc", "/Zi", "/Fe:", "midi.exe", "midi.cpp"],
+      "label": "VS2019 build",
+      "command": "${fileDirname}\\build.bat",
+      "problemMatcher": [],
       "group": {
         "kind": "build",
         "isDefault": true
-      },
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": "$msCompile"
+      }
     }
   ]
 }

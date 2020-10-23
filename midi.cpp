@@ -9,6 +9,7 @@
 #include <mmeapi.h>
 #include <Mmdeviceapi.h>
 #include <dinput.h>
+#include <thread> 
 
 //Arturia MiniLab mapping - ABLETON (TAB 8, KEY MIDI CH 1)
 #define ART_ML_MKII_STATUS_PITCH 0xE5
@@ -55,6 +56,8 @@
 UINT deviceListSize;
 UINT selectedDevice;
 UINT deviceId;
+
+BOOL isRecording;
 
 using namespace std;
 
@@ -236,6 +239,55 @@ void selectDevice(){
     cin >> selectedDevice;
 }
 
+int checkKeyDown()
+{
+    int keyPressed = -1;
+
+    if(GetAsyncKeyState(0x41) < 0) keyPressed = DIK_A;
+    if(GetAsyncKeyState(0x42) < 0) keyPressed = DIK_B;
+    if(GetAsyncKeyState(0x43) < 0) keyPressed = DIK_C;
+    if(GetAsyncKeyState(0x44) < 0) keyPressed = DIK_D;
+    if(GetAsyncKeyState(0x45) < 0) keyPressed = DIK_E;
+    if(GetAsyncKeyState(0x46) < 0) keyPressed = DIK_F;
+    if(GetAsyncKeyState(0x47) < 0) keyPressed = DIK_G;
+    if(GetAsyncKeyState(0x48) < 0) keyPressed = DIK_H;
+    if(GetAsyncKeyState(0x49) < 0) keyPressed = DIK_I;
+    if(GetAsyncKeyState(0x4A) < 0) keyPressed = DIK_J;
+    if(GetAsyncKeyState(0x4B) < 0) keyPressed = DIK_K;
+    if(GetAsyncKeyState(0x4C) < 0) keyPressed = DIK_L;
+    if(GetAsyncKeyState(0x4D) < 0) keyPressed = DIK_M;
+    if(GetAsyncKeyState(0x4E) < 0) keyPressed = DIK_N;
+    if(GetAsyncKeyState(0x4F) < 0) keyPressed = DIK_O;
+    if(GetAsyncKeyState(0x50) < 0) keyPressed = DIK_P;
+    if(GetAsyncKeyState(0x51) < 0) keyPressed = DIK_Q;
+    if(GetAsyncKeyState(0x52) < 0) keyPressed = DIK_R;
+    if(GetAsyncKeyState(0x53) < 0) keyPressed = DIK_S;
+    if(GetAsyncKeyState(0x54) < 0) keyPressed = DIK_T;
+    if(GetAsyncKeyState(0x55) < 0) keyPressed = DIK_U;
+    if(GetAsyncKeyState(0x56) < 0) keyPressed = DIK_V;
+    if(GetAsyncKeyState(0x57) < 0) keyPressed = DIK_W;
+    if(GetAsyncKeyState(0x58) < 0) keyPressed = DIK_X;
+    if(GetAsyncKeyState(0x59) < 0) keyPressed = DIK_Y;
+    if(GetAsyncKeyState(0x5A) < 0) keyPressed = DIK_Z;
+
+    return keyPressed;
+}
+
+void recordInput()
+{
+    int dInputKey = 0x00;
+   
+    while((dInputKey = checkKeyDown()) < 0)
+    {
+        if(GetAsyncKeyState(VK_RCONTROL) < 0)
+        {
+            isRecording = false;
+            Sleep(200);
+            break;
+        }
+    }
+}
+
 int main(){
     HMIDIIN inHandler;
     selectDevice();
@@ -246,7 +298,20 @@ int main(){
             {
                 cout << "exiting...";
                 midiInStop(inHandler);
+                Sleep(5000);
                 break;
+            }
+            
+            if(GetAsyncKeyState(VK_RCONTROL) < 0)
+            {
+                isRecording = true;
+                Sleep(200);
+            }
+
+            while(isRecording)
+            {
+                cout << "Flushing the output stream." << flush;
+                recordInput();
             }
 
             //read buffer
